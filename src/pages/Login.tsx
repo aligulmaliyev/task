@@ -1,9 +1,12 @@
-import { Button, Card, Col, Form, Input, Row } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row } from "antd";
 import { useStore } from "../store";
 import { ILogin } from "../models/Login";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Login = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalEmail, setModalEmail] = useState("");
   const { userStore } = useStore();
   const navigate = useNavigate();
 
@@ -12,6 +15,16 @@ const Login = () => {
     if (userStore.token) {
       navigate("/");
     }
+  };
+
+  const onSubmitModal = () => {
+    setModalEmail("");
+    setIsModalVisible(false);
+  };
+
+  const onCancelModal = () => {
+    setModalEmail("");
+    setIsModalVisible(false);
   };
 
   return (
@@ -24,9 +37,6 @@ const Login = () => {
           }}
           wrapperCol={{
             span: 24,
-          }}
-          initialValues={{
-            remember: true,
           }}
           onFinish={onFinish}
           autoComplete="off"
@@ -56,6 +66,11 @@ const Login = () => {
           >
             <Input.Password />
           </Form.Item>
+          <Form.Item>
+            <a onClick={() => setIsModalVisible(true)} type="link">
+              Forgot Password?
+            </a>
+          </Form.Item>
           <Form.Item
             wrapperCol={{
               offset: 10,
@@ -68,6 +83,20 @@ const Login = () => {
           </Form.Item>
         </Form>
       </Card>
+
+      <Modal
+        title="Forgot Password"
+        visible={isModalVisible}
+        onOk={onSubmitModal}
+        onCancel={onCancelModal}
+        width={300}
+      >
+        <p>Email</p>
+        <Input
+          value={modalEmail}
+          onChange={(e) => setModalEmail(e.target.value)}
+        />
+      </Modal>
     </div>
   );
 };

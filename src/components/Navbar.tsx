@@ -4,7 +4,7 @@ import { useStore } from "../store";
 
 const Navbar = () => {
   const location = useLocation();
-  const { loginStore } = useStore();
+  const { userStore } = useStore();
 
   const items: MenuProps["items"] = [
     {
@@ -25,7 +25,7 @@ const Navbar = () => {
     },
     {
       label: (
-        <Link to="/login" onClick={() => loginStore.logout()}>
+        <Link to="/login" onClick={() => userStore.logout()}>
           Logout
         </Link>
       ),
