@@ -1,8 +1,17 @@
 import { Button, Card, Col, Form, Input, Row } from "antd";
+import { useStore } from "../store";
+import { ILogin } from "../models/Login";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const { userStore } = useStore();
+  const navigate = useNavigate();
+
+  const onFinish = (user: ILogin) => {
+    userStore.login(user);
+    if (userStore.token) {
+      navigate("/");
+    }
   };
 
   return (

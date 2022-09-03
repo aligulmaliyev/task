@@ -1,21 +1,22 @@
 import { Button, Card, Col, Form, Input, Row } from "antd";
 import { useState } from "react";
+import { useStore } from "../store";
 
 const Profile = () => {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
+  const { userStore } = useStore();
+
   const onChangeName = (e: any) => {
-    setName(e.target.value);
+    userStore.setName(e.target.value);
   };
   const onChangePassword = (e: any) => {
-    setPassword(e.target.value);
+    userStore.setPassword(e.target.value);
   };
 
   const onSaveName = () => {
-    console.log(name);
+    userStore.changeName();
   };
   const onSavePassword = () => {
-    console.log(password);
+    userStore.changePassword();
   };
 
   return (
@@ -24,7 +25,11 @@ const Profile = () => {
         <h1>Change Profile</h1>
         <Row gutter={10}>
           <Col className="gutter-box" span={16}>
-            <Input onInput={onChangeName} />
+            <Input
+              defaultValue={userStore.user.name}
+              placeholder="Name"
+              onInput={onChangeName}
+            />
           </Col>
           <Col className="gutter-box" span={8}>
             <Button onClick={onSaveName} block type="primary">
@@ -34,7 +39,11 @@ const Profile = () => {
         </Row>
         <Row gutter={10}>
           <Col className="gutter-box" span={16}>
-            <Input.Password onInput={onChangePassword} />
+            <Input.Password
+              defaultValue={userStore.user.password}
+              placeholder="Password"
+              onInput={onChangePassword}
+            />
           </Col>
           <Col className="gutter-box" span={8}>
             <Button onClick={onSavePassword} type="primary" block>

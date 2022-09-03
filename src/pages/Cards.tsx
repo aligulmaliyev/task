@@ -1,9 +1,16 @@
-import { Button, Space, Table, Tag } from "antd";
+import { Button, Table } from "antd";
 import { ICard } from "../models/Card";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../store";
 
 const Cards = () => {
+  const { cardStore } = useStore();
+  const onSave = (card: ICard) => {};
   const onEdit = (card: ICard) => {};
-  const onDelete = (card: ICard) => {};
+  const onDelete = (card: ICard) => {
+    cardStore.deleteCard(card.id);
+  };
+
   const columns = [
     {
       title: "Id",
@@ -30,22 +37,8 @@ const Cards = () => {
       ),
     },
   ];
-  const data: ICard[] = [
-    {
-      id: 1,
-      name: "John Brown",
-    },
-    {
-      id: 2,
-      name: "Jim Green",
-    },
-    {
-      id: 3,
-      name: "Joe Black",
-    },
-  ];
 
-  return <Table rowKey='id' columns={columns} dataSource={data} />;
+  return <Table rowKey="id" columns={columns} dataSource={cardStore.cards} />;
 };
 
-export default Cards;
+export default observer(Cards);

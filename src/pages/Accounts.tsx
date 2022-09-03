@@ -1,9 +1,16 @@
 import { Button, Space, Table, Tag } from "antd";
+import { observer } from "mobx-react-lite";
 import { IAccount } from "../models/Account";
+import { useStore } from "../store";
 
-const Cards = () => {
+const Accounts = () => {
+  const { accountStore } = useStore();
   const onEdit = (account: IAccount) => {};
-  const onDelete = (account: IAccount) => {};
+
+  const onDelete = (account: IAccount) => {
+    accountStore.deleteAccount(account.id);
+  };
+  
   const columns = [
     {
       title: "Id",
@@ -30,22 +37,10 @@ const Cards = () => {
       ),
     },
   ];
-  const data: IAccount[] = [
-    {
-      id: 1,
-      name: "John Brown",
-    },
-    {
-      id: 2,
-      name: "Jim Green",
-    },
-    {
-      id: 3,
-      name: "Joe Black",
-    },
-  ];
 
-  return <Table rowKey='id'  columns={columns} dataSource={data} />;
+  return (
+    <Table rowKey="id" columns={columns} dataSource={accountStore.accounts} />
+  );
 };
 
-export default Cards;
+export default observer(Accounts);
