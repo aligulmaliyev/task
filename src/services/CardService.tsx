@@ -1,37 +1,45 @@
 import { ICard } from "../models/Card";
 import { api } from "./api";
-
+const CARD_API = api + "Cards"
 class CardService {
   getList = async () => {
-    const response = await fetch(api);
+    const response = await fetch(CARD_API, {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        "Content-Type": 'application/json'
+      },
+    });
     return response.json();
   };
 
   get = async (id: number) => {
-    const response = await fetch(api + "/" + id);
+    const response = await fetch(CARD_API + "/" + id);
     return response.json();
   };
 
-  post = async (user: ICard) => {
-    const response = await fetch(api + "cards", {
+  post = async (card: ICard) => {
+    const response = await fetch(CARD_API, {
       method: "POST",
-      body: JSON.stringify(user),
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        "Content-Type": 'application/json'
+      },
+      body: JSON.stringify(card),
     });
     return response;
   };
-  put = async (user: ICard) => {
-    const response = await fetch(api + `cards/${user.id}`, {
+  put = async (card: ICard) => {
+    const response = await fetch(CARD_API, {
       method: "PUT",
-      body: JSON.stringify(user),
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        "Content-Type": 'application/json'
+      },
+      body: JSON.stringify(card),
     });
     return response;
   };
-  delete = async (id: number) => {
-    const response = await fetch(api + "/" + id, {
-      method: "DELETE",
-    });
-    return response;
-  };
+
 }
 
 export default CardService;

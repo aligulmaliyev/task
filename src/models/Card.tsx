@@ -1,4 +1,8 @@
 export interface ICard {
-    id:number,
-    name:string
+    id: number
+    cardNumber: string,
+    isValid: boolean,
+    state: string,
+    type: string,
+    currency: string
 }

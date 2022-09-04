@@ -1,34 +1,42 @@
-import { IAccount } from "../models/Account";
+import { IAccount, IAccountAmount } from "../models/Account";
 import { api } from "./api";
 
+const ACCOUNT_API = api + 'Accounts'
+
 class AccountService {
+
   getList = async () => {
-    const response = await fetch(api);
+    const response = await fetch(ACCOUNT_API, {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+    });
     return response.json();
   };
 
-  get = async (id: number) => {
-    const response = await fetch(api + "/" + id);
-    return response.json();
-  };
-
-  post = async (user: IAccount) => {
-    const response = await fetch(api + "cards", {
+  post = async (account: IAccount) => {
+    const response = await fetch(ACCOUNT_API, {
       method: "POST",
-      body: JSON.stringify(user),
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        "Content-Type": 'application/json'
+      },
+      body: JSON.stringify({
+        id: 0,
+        balance: Number(account.balance),
+        type: account.type
+      }),
     });
     return response;
   };
-  put = async (user: IAccount) => {
-    const response = await fetch(api + `cards/${user.id}`, {
-      method: "PUT",
-      body: JSON.stringify(user),
-    });
-    return response;
-  };
-  delete = async (id: number) => {
-    const response = await fetch(api + "/" + id, {
-      method: "DELETE",
+  postAmount = async (amount: IAccountAmount) => {
+    const response = await fetch(ACCOUNT_API + `/${amount.accountId}/cash-in`, {
+      method: "POST",
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        "Content-Type": 'application/json'
+      },
+      body: JSON.stringify({
+        amount: Number(amount.amount),
+      }),
     });
     return response;
   };

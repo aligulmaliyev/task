@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import RootStore, { StoreProvider } from "./store";
+import Transactions from "./pages/Transactions";
 
 const store = new RootStore();
 
@@ -16,13 +17,13 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <StoreProvider store={store}>
     <BrowserRouter>
       <Routes>
-        
         <Route path="login" element={<Login />} />
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
           <Route path="accounts" element={<Accounts />} />
           <Route path="cards" element={<Cards />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="transactions" element={<Transactions />} />
         </Route>
       </Routes>
     </BrowserRouter>

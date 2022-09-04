@@ -1,30 +1,31 @@
-import { Button, Card, Col, Form, Input, Modal, Row } from "antd";
+import { Button, Card, Form, Input, Modal } from "antd";
 import { useStore } from "../store";
 import { ILogin } from "../models/Login";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Login = () => {
+  const [newPasswordForm] = Form.useForm()
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalEmail, setModalEmail] = useState("");
   const { userStore } = useStore();
   const navigate = useNavigate();
 
   const onFinish = (user: ILogin) => {
-    userStore.login(user);
-    if (userStore.token) {
-      navigate("/");
-    }
+    userStore.login(user).then(() => navigate('/'));
   };
 
-  const onSubmitModal = () => {
-    setModalEmail("");
+  const closeModal = () => {
+    newPasswordForm.resetFields()
     setIsModalVisible(false);
+  }
+
+  const onSubmitModal = (email:any) => {
+    userStore.newPassword(email)
+    closeModal()
   };
 
   const onCancelModal = () => {
-    setModalEmail("");
-    setIsModalVisible(false);
+    closeModal()
   };
 
   return (
@@ -42,12 +43,12 @@ const Login = () => {
           autoComplete="off"
         >
           <Form.Item
-            label="Name"
-            name="name"
+            label="Username"
+            name="username"
             rules={[
               {
                 required: true,
-                message: "Please input your name!",
+                message: "Please input your username!",
               },
             ]}
           >
@@ -83,19 +84,39 @@ const Login = () => {
           </Form.Item>
         </Form>
       </Card>
-
       <Modal
         title="Forgot Password"
         visible={isModalVisible}
-        onOk={onSubmitModal}
         onCancel={onCancelModal}
+        footer={null}
         width={300}
       >
-        <p>Email</p>
-        <Input
-          value={modalEmail}
-          onChange={(e) => setModalEmail(e.target.value)}
-        />
+        <Form form={newPasswordForm} onFinish={onSubmitModal} labelCol={{
+          span: 24,
+        }}
+          wrapperCol={{
+            span: 24,
+          }}>
+          <Form.Item label="Email" name="email" rules={[
+            {
+              required: true,
+              message: "Please input your Email!",
+            },
+          ]}>
+            <Input type="email" />
+          </Form.Item>
+
+          <Form.Item
+            wrapperCol={{
+              offset: 10,
+              span: 24,
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Send
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

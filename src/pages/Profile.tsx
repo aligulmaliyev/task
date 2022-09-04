@@ -1,17 +1,27 @@
 import { Button, Card, Col, Form, Input, Row } from "antd";
-import { useState } from "react";
+import { useEffect } from "react";
+import { IPasswords, IProfile } from "../models/Profile";
 import { useStore } from "../store";
 
 const Profile = () => {
-  const { userStore } = useStore();
+  const { profileStore } = useStore();
+  const [profileForm] = Form.useForm()
+  const [passwordForm] = Form.useForm()
 
-  const onSaveName = () => {
-    userStore.changeName();
+  const onSaveProfile = (profile: IProfile) => {
+    profileStore.changeProfile(profile)
   };
-  const onSavePassword = (values: any) => {
-    console.log(values)
-    userStore.changePassword();
+
+  const onSavePassword = (passwords: IPasswords) => {
+    profileStore.changePassword(passwords)
   };
+
+  useEffect(() => {
+    profileStore.getProfile()
+    setTimeout(()=>{
+      profileForm.setFieldsValue(profileStore.user)
+    },100)
+  }, [])
 
   return (
     <div className="profile-container">
@@ -20,7 +30,8 @@ const Profile = () => {
         <Row gutter={10}>
           <Col className="gutter-box" span={24}>
             <Form
-              onFinish={onSavePassword}
+              form={profileForm}
+              onFinish={onSaveProfile}
               labelCol={{
                 span: 24,
               }}
@@ -29,26 +40,48 @@ const Profile = () => {
               }}
             >
               <Form.Item
-                label="Name"
-                name="name"
+                label="First Name"
+                name="firstName"
                 rules={[
                   {
                     required: true,
-                    message: "Please input your name!",
+                    message: "Please input your first name!",
                   },
                 ]}
               >
-                <Input placeholder="Name" />
+                <Input placeholder="First Name" />
               </Form.Item>
-
+              <Form.Item
+                label="Last Name"
+                name="lastName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your last name!",
+                  },
+                ]}
+              >
+                <Input placeholder="Last Name" />
+              </Form.Item>
+              <Form.Item
+                label="User Name"
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your user name!",
+                  },
+                ]}
+              >
+                <Input placeholder="User Name" />
+              </Form.Item>
               <Form.Item>
                 <Button
-                  onClick={onSaveName}
                   type="primary"
                   block
                   htmlType="submit"
                 >
-                  Save Name
+                  Save Profile
                 </Button>
               </Form.Item>
             </Form>
@@ -57,6 +90,7 @@ const Profile = () => {
         <Row gutter={10}>
           <Col className="gutter-box" span={24}>
             <Form
+              form={passwordForm}
               onFinish={onSavePassword}
               labelCol={{
                 span: 24,
@@ -67,7 +101,7 @@ const Profile = () => {
             >
               <Form.Item
                 label="Old Password"
-                name="old-password"
+                name="old"
                 rules={[
                   {
                     required: true,
@@ -79,7 +113,7 @@ const Profile = () => {
               </Form.Item>
               <Form.Item
                 label="New Password"
-                name="new-password"
+                name="new"
                 rules={[
                   {
                     required: true,
@@ -90,20 +124,19 @@ const Profile = () => {
                 <Input.Password placeholder="New Password" />
               </Form.Item>
               <Form.Item
-                label="New Repassword"
-                name="new-repassword"
+                label="New Confirmed"
+                name="newConfirmed"
                 rules={[
                   {
                     required: true,
-                    message: "Please input your new repassword!",
+                    message: "Please input your New Confirmed!",
                   },
                 ]}
               >
-                <Input.Password placeholder="New Repassword" />
+                <Input.Password placeholder="New Confirmed" />
               </Form.Item>
               <Form.Item>
                 <Button
-                  onClick={onSavePassword}
                   type="primary"
                   block
                   htmlType="submit"

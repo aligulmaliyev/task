@@ -2,22 +2,25 @@ import { makeAutoObservable } from "mobx";
 import { createContext, ReactNode, useContext } from "react";
 import AccountStore from "./AccountStore";
 import CardStore from "./CardStore";
+import ProfileStore from "./ProfileStore";
+import TransactionStore from "./Transactions";
 import UserStore from "./UserStore";
 
 export class RootStore {
   cardStore: CardStore;
   accountStore: AccountStore;
   userStore: UserStore;
-
+  profileStore: ProfileStore;
+  transactionStore: TransactionStore
+  
   constructor() {
     makeAutoObservable(this);
 
     this.cardStore = new CardStore();
     this.accountStore = new AccountStore();
     this.userStore = new UserStore();
-
-    this.cardStore.getCards();
-    this.accountStore.getAccounts();
+    this.profileStore = new ProfileStore();
+    this.transactionStore = new TransactionStore()
   }
 }
 

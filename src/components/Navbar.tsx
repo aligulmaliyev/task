@@ -24,6 +24,11 @@ const Navbar = () => {
       key: "/profile",
     },
     {
+      label: <Link to="/transactions">Transactions</Link>,
+      key: "/transactions",
+    },
+    
+    {
       label: (
         <Link to="/login" onClick={() => userStore.logout()}>
           Logout

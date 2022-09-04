@@ -51,24 +51,11 @@ class CardStore {
       });
     }
   };
+
   updateCard = async (card: ICard) => {
     try {
       const response = await this.cardService.put(card);
       if (response.status === 200) {
-        runInAction(() => {
-          this.status = "success";
-        });
-      }
-    } catch (error) {
-      runInAction(() => {
-        this.status = "error";
-      });
-    }
-  };
-  deleteCard = async (id: number) => {
-    try {
-      const response = await this.cardService.delete(id);
-      if (response.status === 204) {
         runInAction(() => {
           this.status = "success";
         });

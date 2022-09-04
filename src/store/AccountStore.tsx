@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { IAccount } from "../models/Account";
+import { IAccount, IAccountAmount } from "../models/Account";
 import AccountService from "../services/AccountService";
 
 class AccountStore {
@@ -25,18 +25,6 @@ class AccountStore {
       });
     }
   };
-  getAccount = async (id: number) => {
-    try {
-      const data = await this.accountService.get(id);
-      runInAction(() => {
-        this.account = data;
-      });
-    } catch (error) {
-      runInAction(() => {
-        this.status = "error";
-      });
-    }
-  };
   createAccount = async (account: IAccount) => {
     try {
       const response = await this.accountService.post(account);
@@ -51,10 +39,10 @@ class AccountStore {
       });
     }
   };
-  updateAccount = async (account: IAccount) => {
+  createAmount = async(amount:IAccountAmount)=>{
     try {
-      const response = await this.accountService.put(account);
-      if (response.status === 200) {
+      const response = await this.accountService.postAmount(amount);
+      if (response.status === 201) {
         runInAction(() => {
           this.status = "success";
         });
@@ -64,21 +52,7 @@ class AccountStore {
         this.status = "error";
       });
     }
-  };
-  deleteAccount = async (id: number) => {
-    try {
-      const response = await this.accountService.delete(id);
-      if (response.status === 204) {
-        runInAction(() => {
-          this.status = "success";
-        });
-      }
-    } catch (error) {
-      runInAction(() => {
-        this.status = "error";
-      });
-    }
-  };
+  }
 }
 
 export default AccountStore;

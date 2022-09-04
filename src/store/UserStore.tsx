@@ -4,8 +4,7 @@ import UserService from "../services/UserService";
 
 class LoginStore {
   userService: UserService;
-  token: string = "";
-  user: ILogin = {} as ILogin;
+  token: string = String(localStorage.getItem('token'));
   status: string = "initial";
 
   constructor() {
@@ -15,10 +14,10 @@ class LoginStore {
 
   login = async (user: ILogin) => {
     try {
-      // const token = await this.userService.get(user);
+      const result = await this.userService.post(user);
       runInAction(() => {
-        this.user = user;
-        this.token = user.name;
+        localStorage.setItem('token', result.accessToken)
+        this.token = result.accessToken;
       });
     } catch (error) {
       runInAction(() => {
@@ -29,6 +28,7 @@ class LoginStore {
   logout = async () => {
     try {
       runInAction(() => {
+        localStorage.setItem('token','')
         this.token = "";
       });
     } catch (error) {
@@ -37,41 +37,17 @@ class LoginStore {
       });
     }
   };
-  changeName = async () => {
+  newPassword = async (email: any) => {
     try {
-      const response = await this.userService.updateName(this.user.name);
-      if (response.status === 200) {
-        runInAction(() => {
-          this.status = "success";
-        });
-      }
+      const result = await this.userService.postNewPassword(email);
+      runInAction(() => {
+        this.token = result.accessToken;
+      });
     } catch (error) {
       runInAction(() => {
         this.status = "error";
       });
     }
-  };
-  changePassword = async () => {
-    try {
-      const response = await this.userService.updatePassword(
-        this.user.password
-      );
-      if (response.status === 200) {
-        runInAction(() => {
-          this.status = "success";
-        });
-      }
-    } catch (error) {
-      runInAction(() => {
-        this.status = "error";
-      });
-    }
-  };
-  setName = (name: string) => {
-    this.user.name = name;
-  };
-  setPassword = (password: string) => {
-    this.user.password = password;
   };
 }
 
